@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>MIT Access Points & Buildings</title>
+
+  <!-- Leaflet CSS -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""
+  />
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      background: #f5f5f7;
+      color: #111827;
+      display: flex;
+      height: 100vh;
+      max-height: 100vh;
+      overflow: hidden;
+    }
+
+    .sidebar {
+      width: 340px;
+      padding: 14px;
+      background: #ffffff;
+      border-right: 1px solid #e5e7eb;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .sidebar h1 {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .sidebar p.subtitle {
+      font-size: 11px;
+      color: #6b7280;
+      margin-bottom: 6px;
+    }
+
+    .locations-list {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .loc-btn {
+      padding: 7px 9px;
+      border-radius: 9px;
+      border: 1px solid #e5e7eb;
+      background: #f9fafb;
+      font-size: 11px;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .loc-btn strong {
+      display: block;
+      font-size: 11px;
+      margin-bottom: 1px;
+    }
+
+    .loc-btn span {
+      font-size: 10px;
+      color: #6b7280;
+    }
+
+    .loc-btn:hover {
+      background: #eef2ff;
+      border-color: #4f46e5;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(15,23,42,0.08);
+    }
+
+    .loc-btn.active {
+      background: #4f46e5;
+      color: #ffffff;
+      border-color: #4338ca;
+      box-shadow: 0 4px 12px rgba(79,70,229,0.35);
+    }
+
+    #map {
+      flex: 1;
+      position: relative;
+    }
+
+    #map-inner {
+      height: 100%;
+      width: 100%;
+    }
+
+    .info-panel {
+      position: fixed;
+      bottom: 14px;
+      left: 360px; /* to the right of sidebar */
+      max-width: 340px;
+      padding: 9px 11px;
+      background: rgba(17,24,39,0.96);
+      color: #f9fafb;
+      border-radius: 14px;
+      font-size: 10px;
+      box-shadow: 0 10px 26px rgba(15,23,42,0.4);
+      backdrop-filter: blur(8px);
+      z-index: 9999;
+    }
+
+    .info-panel h2 {
+      font-size: 12px;
+      margin-bottom: 2px;
+      font-weight: 600;
+    }
+
+    .info-panel p {
+      font-size: 10px;
+      line-height: 1.5;
+      color: #d1d5db;
+      margin-bottom: 4px;
+    }
+
+    .info-panel ul {
+      margin: 2px 0 6px;
+      padding-left: 14px;
+      font-size: 9px;
+      color: #e5e7eb;
+    }
+
+    .info-btn {
+      padding: 5px 8px;
+      border-radius: 999px;
+      border: none;
+      font-size: 10px;
+      cursor: pointer;
+      background: #4f46e5;
+      color: #f9fafb;
+      box-shadow: 0 4px 10px rgba(79,70,229,0.5);
+      transition: background 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .info-btn:hover {
+      background: #4338ca;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 14px rgba(79,70,229,0.6);
+    }
+
+    @media (max-width: 900px) {
+      body {
+        flex-direction: column;
+      }
+      .sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #e5e7eb;
+        max-height: 40vh;
+      }
+      #map {
+        height: 60vh;
+      }
+      .info-panel {
+        left: 10px;
+        bottom: 10px;
+        max-width: 85%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <h1>MIT Access Points</h1>
+    <p class="subtitle">
+      Click an access point to highlight the main campus buildings it serves and open its info Classroom.
+    </p>
+    <div class="locations-list" id="accessPointsList"></div>
+  </div>
+
+  <div id="map">
+    <div id="map-inner"></div>
+  </div>
+
+  <div class="info-panel" id="infoPanel">
+    <h2>Welcome</h2>
+    <p>Select an access point on the left or on the map to see which buildings are best accessed from there.</p>
+  </div>
+
+  <!-- Leaflet JS -->
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""
+  ></script>
+
+  <script>
+    // Base map centered on MIT
+    const map = L.map("map-inner").setView([42.3592, -71.0930], 16);
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19,
+      attribution: "&copy; OpenStreetMap contributors"
+    }).addTo(map);
+
+    const infoPanel = document.getElementById("infoPanel");
+    const accessPointsList = document.getElementById("accessPointsList");
+
+    const accessPointMarkers = {};
+    const accessPointButtons = {};
+    const buildingMarkers = {};
+
+    // --- BUILDINGS ---
+    // Core main-campus buildings (1–10, 13, 14, 16, 18, 24, 26, 32, 34, 36 + key anchors).
+    // Coordinates are approximate; refine from whereis.mit.edu if needed.
+    const buildings = [
+      { id: "b1",  name: "Building 1",  lat: 42.3590, lng: -71.0939 },
+      { id: "b2",  name: "Building 2",  lat: 42.3592, lng: -71.0934 },
+      { id: "b3",  name: "Building 3",  lat: 42.3593, lng: -71.0929 },
+      { id: "b4",  name: "Building 4",  lat: 42.3593, lng: -71.0923 },
+      { id: "b5",  name: "Building 5",  lat: 42.3590, lng: -71.0920 },
+      { id: "b6",  name: "Building 6",  lat: 42.3596, lng: -71.0929 },
+      { id: "b7",  name: "Building 7 (77 Mass Ave)", lat: 42.3592, lng: -71.0930 },
+      { id: "b8",  name: "Building 8",  lat: 42.3596, lng: -71.0923 },
+      { id: "b9",  name: "Building 9",  lat: 42.3596, lng: -71.0918 },
+      { id: "b10", name: "Building 10 (Great Dome)", lat: 42.3599, lng: -71.0921 },
+      { id: "b13", name: "Building 13", lat: 42.3604, lng: -71.0898 },
+      { id: "b14", name: "Building 14", lat: 42.3599, lng: -71.0906 },
+      { id: "b16", name: "Building 16", lat: 42.3600, lng: -71.0915 },
+      { id: "b18", name: "Building 18", lat: 42.3600, lng: -71.0927 },
+      { id: "b24", name: "Building 24", lat: 42.3603, lng: -71.0911 },
+      { id: "b26", name: "Building 26", lat: 42.3605, lng: -71.0920 },
+      { id: "b32", name: "Building 32 (Stata Center)", lat: 42.36135, lng: -71.09043 },
+      { id: "b34", name: "Building 34", lat: 42.3608, lng: -71.0908 },
+      { id: "b36", name: "Building 36", lat: 42.3610, lng: -71.0916 },
+      { id: "w20", name: "W20 Stratton Student Center", lat: 42.3598, lng: -71.0947 },
+      { id: "w16", name: "W16 Kresge Auditorium", lat: 42.3590, lng: -71.0956 },
+      { id: "w35", name: "W35 Z Center", lat: 42.3592, lng: -71.0969 }
+    ];
+
+    // Draw subtle building markers
+    buildings.forEach((b) => {
+      const marker = L.circleMarker([b.lat, b.lng], {
+        radius: 5,
+        color: "#9ca3af",
+        fillColor: "#9ca3af",
+        fillOpacity: 0.85
+      }).addTo(map);
+
+      marker.bindTooltip(b.name, { permanent: false, direction: "top" });
+      buildingMarkers[b.id] = marker;
+    });
+
+    // --- ACCESS POINTS ---
+    // Each has its own Classroom link + list of building IDs it serves.
+    const accessPoints = [
+      {
+        id: "alleyA",
+        name: "Alley A",
+        short: "Access between main campus and NE corridor.",
+        lat: 42.3614,
+        lng: -71.0897,
+        classroomUrl: "https://classroom.google.com/c/YOUR_ALLEY_A_CLASS_ID",
+        buildingsServed: ["b32", "b34", "b36", "b24", "b26", "b13"]
+      },
+      {
+        id: "nanoWalk",
+        name: "Nano Building Walk",
+        short: "Path by MIT.nano into main corridor.",
+        lat: 42.3602,
+        lng: -71.0918,
+        classroomUrl: "https://classroom.google.com/c/YOUR_NANO_WALK_CLASS_ID",
+        buildingsServed: ["b13", "b14", "b16", "b18", "b24", "b26", "b8", "b10"]
+      },
+      {
+        id: "stataAlley",
+        name: "Stata Access Alley",
+        short: "Primary access to Stata / north complex.",
+        lat: 42.3612,
+        lng: -71.0900,
+        classroomUrl: "https://classroom.google.com/c/YOUR_STATA_ACCESS_ALLEY_CLASS_ID",
+        buildingsServed: ["b32", "b34", "b36", "b24", "b26"]
+      },
+      {
+        id: "hockfieldCourt",
+        name: "Hockfield Court",
+        short: "Central access between Koch, Stata, and main complex.",
+        lat: 42.3622,
+        lng: -71.0908,
+        classroomUrl: "https://classroom.google.com/c/YOUR_HOCKFIELD_COURT_CLASS_ID",
+        buildingsServed: ["b32", "b34", "b36", "b24", "b26", "b13"]
+      },
+      {
+        id: "mcdermottCourt",
+        name: "McDermott Court",
+        short: "Access for central dome & main corridor.",
+        lat: 42.3595,
+        lng: -71.0923,
+        classroomUrl: "https://classroom.google.com/c/YOUR_MCDERMOTT_COURT_CLASS_ID",
+        buildingsServed: ["b3", "b4", "b5", "b6", "b8", "b9", "b10", "b14", "b16", "b18"]
+      },
+      {
+        id: "killianCourt",
+        name: "Killian Court",
+        short: "Access for river-facing main buildings.",
+        lat: 42.3584,
+        lng: -71.0899,
+        classroomUrl: "https://classroom.google.com/c/YOUR_KILLIAN_COURT_CLASS_ID",
+        buildingsServed: ["b1", "b2", "b3", "b4", "b10"]
+      },
+      {
+        id: "zCenter",
+        name: "Z Center",
+        short: "Access for athletics & west-side buildings.",
+        lat: 42.3592,
+        lng: -71.0969,
+        classroomUrl: "https://classroom.google.com/c/YOUR_Z_CENTER_CLASS_ID",
+        buildingsServed: ["w35", "w16", "w20", "b7", "b1"]
+      }
+    ];
+
+    // Create access point markers & sidebar buttons
+    accessPoints.forEach((ap) => {
+      const marker = L.marker([ap.lat, ap.lng]).addTo(map);
+      marker.on("click", () => focusAccessPoint(ap.id));
+      accessPointMarkers[ap.id] = marker;
+
+      const btn = document.createElement("button");
+      btn.className = "loc-btn";
+      btn.innerHTML = `
+        <strong>${ap.name}</strong>
+        <span>${ap.short}</span>
+      `;
+      btn.addEventListener("click", () => focusAccessPoint(ap.id));
+      accessPointsList.appendChild(btn);
+      accessPointButtons[ap.id] = btn;
+    });
+
+    function resetBuildingHighlights() {
+      Object.values(buildingMarkers).forEach((m) => {
+        m.setStyle({
+          radius: 5,
+          color: "#9ca3af",
+          fillColor: "#9ca3af",
+          fillOpacity: 0.85
+        });
+      });
+    }
+
+    function highlightBuildings(ids) {
+      ids.forEach((id) => {
+        const marker = buildingMarkers[id];
+        if (marker) {
+          marker.setStyle({
+            radius: 8,
+            color: "#4f46e5",
+            fillColor: "#4f46e5",
+            fillOpacity: 1
+          });
+        }
+      });
+    }
+
+    function focusAccessPoint(id) {
+      const ap = accessPoints.find((a) => a.id === id);
+      if (!ap) return;
+
+      // Sidebar highlight
+      Object.values(accessPointButtons).forEach((b) =>
+        b.classList.remove("active")
+      );
+      if (accessPointButtons[id]) {
+        accessPointButtons[id].classList.add("active");
+      }
+
+      // Reset + highlight buildings
+      resetBuildingHighlights();
+      highlightBuildings(ap.buildingsServed);
+
+      // Fit map around access point + served buildings
+      const pts = [[ap.lat, ap.lng]];
+      ap.buildingsServed.forEach((bid) => {
+        const b = buildings.find((bb) => bb.id === bid);
+        if (b) pts.push([b.lat, b.lng]);
+      });
+
+      if (pts.length > 1) {
+        const bounds = L.latLngBounds(pts).pad(0.2);
+        map.fitBounds(bounds, { animate: true });
+      } else {
+        map.flyTo([ap.lat, ap.lng], 17, { animate: true });
+      }
+
+      // Resolve building names
+      const servedNames = ap.buildingsServed
+        .map((bid) => {
+          const b = buildings.find((bb) => bb.id === bid);
+          return b ? b.name : null;
+        })
+        .filter(Boolean);
+
+      // Update info panel
+      infoPanel.innerHTML = `
+        <h2>${ap.name}</h2>
+        <p>${ap.short}</p>
+        ${
+          servedNames.length
+            ? `<p><strong>Buildings best accessed via this point:</strong></p>
+               <ul>${servedNames.map((n) => `<li>${n}</li>`).join("")}</ul>`
+            : `<p>No buildings configured yet for this access point.</p>`
+        }
+        <button class="info-btn" id="open-classroom">
+          Open Google Classroom
+        </button>
+      `;
+
+      const openBtn = document.getElementById("open-classroom");
+      if (openBtn && ap.classroomUrl) {
+        openBtn.addEventListener("click", () => {
+          window.open(ap.classroomUrl, "_blank", "noopener");
+        });
+      }
+
+      // Popup on marker
+      accessPointMarkers[id]
+        .bindPopup(`<b>${ap.name}</b><br>${ap.short}`)
+        .openPopup();
+    }
+  </script>
+</body>
+</html>
