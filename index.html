@@ -223,34 +223,52 @@
     // Core main-campus buildings (1–10, 13, 14, 16, 18, 24, 26, 32, 34, 36 + key anchors).
     // Coordinates are approximate; refine from whereis.mit.edu if needed.
     const buildings = [
-      { id: "b1",  name: "Building 1",  lat: 42.3590, lng: -71.0939 },
-      { id: "b2",  name: "Building 2",  lat: 42.3592, lng: -71.0934 },
-      { id: "b3",  name: "Building 3",  lat: 42.3593, lng: -71.0929 },
-      { id: "b4",  name: "Building 4",  lat: 42.3593, lng: -71.0923 },
-      { id: "b5",  name: "Building 5",  lat: 42.3590, lng: -71.0920 },
-      { id: "b6",  name: "Building 6",  lat: 42.3596, lng: -71.0929 },
-      { id: "b7",  name: "Building 7 (77 Mass Ave)", lat: 42.3592, lng: -71.0930 },
-      { id: "b8",  name: "Building 8",  lat: 42.3596, lng: -71.0923 },
-      { id: "b9",  name: "Building 9",  lat: 42.3596, lng: -71.0918 },
-      { id: "b10", name: "Building 10 (Great Dome)", lat: 42.3599, lng: -71.0921 },
-      { id: "b13", name: "Building 13", lat: 42.3604, lng: -71.0898 },
-      { id: "b14", name: "Building 14", lat: 42.3599, lng: -71.0906 },
-      { id: "b16", name: "Building 16", lat: 42.3600, lng: -71.0915 },
-      { id: "b18", name: "Building 18", lat: 42.3600, lng: -71.0927 },
-      { id: "b24", name: "Building 24", lat: 42.3603, lng: -71.0911 },
-      { id: "b26", name: "Building 26", lat: 42.3605, lng: -71.0920 },
-      { id: "b32", name: "Building 32 (Stata Center)", lat: 42.36135, lng: -71.09043 },
-      { id: "b34", name: "Building 34", lat: 42.3608, lng: -71.0908 },
-      { id: "b36", name: "Building 36", lat: 42.3610, lng: -71.0916 },
-      { id: "w20", name: "W20 Stratton Student Center", lat: 42.3598, lng: -71.0947 },
-      { id: "w16", name: "W16 Kresge Auditorium", lat: 42.3590, lng: -71.0956 },
-      { id: "w35", name: "W35 Z Center", lat: 42.3592, lng: -71.0969 }
+      { id: "b1",  name: "Building 1",  lat: 42.35808298091113, lng: -71.09252892002844 },
+      { id: "b2",  name: "Building 2",  lat: 42.35881260020042, lng: -71.09001359573712 },
+      { id: "b3",  name: "Building 3",  lat: 42.358892427102724, lng: -71.09239643390524 },
+      { id: "b4",  name: "Building 4",  lat: 42.359261019159995, lng: -71.09089250044453 },
+      { id: "b5",  name: "Building 5",  lat: 42.358713150474316, lng: -71.0929166109595 },
+      { id: "b6",  name: "Building 6",  lat: 42.359482650557084, lng: -71.09038580764431 },
+      { id: "b7",  name: "Building 7 (77 Mass Ave)", lat: 42.359188040364025, lng: -71.09320199302452 },
+      { id: "b8",  name: "Building 8",  lat: 42.35996741797371, lng: -71.09080788984357 },
+      { id: "b9",  name: "Building 9",  lat: 42.35974671250857, lng: -71.09354806544724 },
+      { id: "b10", name: "Building 10 (Great Dome)", lat: 42.35975118837034, lng: -71.09205967873137 },
+      { id: "b11", name: "Building 11", lat: 42.35953443404332, lng: -71.09277291630289 },
+      { id: "b12", name: "Building 12", lat: 42.360220639697246, lng: -71.09152220256173 },
+      { id: "b13", name: "Building 13", lat: 42.35993080323233, lng: -71.0925783863674 },
+      { id: "b14", name: "Building 14", lat: 42.359099099073475, lng: -71.08909729454072 },
+      { id: "b16", name: "Building 16", lat: 42.360476054657354, lng: -71.09047832335692 },
+      { id: "b17", name: "Building 17", lat: 42.36024629992317, lng: -71.09360722409329 },
+      { id: "b18", name: "Building 18", lat: 42.36005710377917, lng: -71.08977828240525 },
+      { id: "b24", name: "Building 24", lat: 42.36065499950997, lng: -71.09205149770779 },
+      { id: "b26", name: "Building 26", lat: 42.361096213716614, lng: -71.09133167466032 },
+      { id: "b31", name: "Building 31", lat: 42.36038854896677, lng: -71.09306806843281 },
+      { id: "b32", name: "Building 32 (Stata Center)", lat: 42.361706803467946, lng: -71.09072855813352 },
+      { id: "b33", name: "Building 33", lat: 42.36016031663528, lng: -71.09380409002638 },
+      { id: "b34", name: "Building 34", lat: 42.36114528392162, lng: -71.09193861322063 },
+      { id: "b35", name: "Building 35", lat: 42.360387162916005, lng: -71.09402980055098 },
+      { id: "b36", name: "Building 36", lat: 42.361461160557774, lng: -71.09164785044138 },
+      { id: "b37", name: "Building 37", lat: 42.36069532346989, lng: -71.09323908453692 },
+      { id: "b38", name: "Building 38", lat: 42.36107347348108, lng: -71.09235976739953 },
+      { id: "b39", name: "Building 39", lat: 42.36086512557845, lng: -71.09273958554424 },
+      { id: "b50", name: "Building 50", lat: 42.35938931883948, lng: -71.08829106761934 },
+      { id: "b54", name: "Building 54", lat: 42.36032337695083, lng: -71.08933163155037 },
+      { id: "b56", name: "Building 56", lat: 42.360695309605134, lng: -71.0898469462037 },
+      { id: "b57", name: "Building 57", lat: 42.361147890837934, lng: -71.09007209921224 },
+      { id: "b62", name: "Building 62", lat: 42.36021731653613, lng: -71.08866589807123 },
+      { id: "b64", name: "Building 64", lat: 42.36042767448183, lng: -71.08816952917566 },
+      { id: "b66", name: "Building 66", lat: 42.36093292249386, lng: -71.08902833905248 },
+      { id: "b68", name: "Building 68", lat: 42.361668684806006, lng: -71.08861623388133 },
+      { id: "b76", name: "Building 76", lat: 42.362280705070106, lng: -71.08931741962527 },
+      { id: "w20", name: "W20 Stratton Student Center", lat: 42.359054791144004, lng: -71.09478624304269 },
+      { id: "w16", name: "W16 Kresge Auditorium", lat: 42.358162864652655, lng: -71.09505825631894 },
+      { id: "w35", name: "W35 Z Center", lat: 42.35870425126371, lng: -71.09589240096959 }
     ];
 
     // Draw subtle building markers
     buildings.forEach((b) => {
       const marker = L.circleMarker([b.lat, b.lng], {
-        radius: 5,
+        radius: 10,
         color: "#9ca3af",
         fillColor: "#9ca3af",
         fillOpacity: 0.85
@@ -267,64 +285,55 @@
         id: "alleyA",
         name: "Alley A",
         short: "Access between main campus and NE corridor.",
-        lat: 42.3614,
-        lng: -71.0897,
-        classroomUrl: "https://classroom.google.com/c/YOUR_ALLEY_A_CLASS_ID",
-        buildingsServed: ["b32", "b34", "b36", "b24", "b26", "b13"]
-      },
-      {
-        id: "nanoWalk",
-        name: "Nano Building Walk",
-        short: "Path by MIT.nano into main corridor.",
-        lat: 42.3602,
-        lng: -71.0918,
-        classroomUrl: "https://classroom.google.com/c/YOUR_NANO_WALK_CLASS_ID",
-        buildingsServed: ["b13", "b14", "b16", "b18", "b24", "b26", "b8", "b10"]
+        lat: 42.360602986277335,
+        lng: -71.09361991892301,
+        classroomUrl: "https://classroom.google.com/c/ODEyNDUyODI0MDM0/a/ODE1NzgxMTQyMTYw/details",
+        buildingsServed: ["b1", "b3", "b5", "b7", "b9", "b10", "b11", "b12", "b13", "b17", "b24", "b26", "b31", "b33", "b34", "b35", "b37"]
       },
       {
         id: "stataAlley",
         name: "Stata Access Alley",
         short: "Primary access to Stata / north complex.",
-        lat: 42.3612,
-        lng: -71.0900,
-        classroomUrl: "https://classroom.google.com/c/YOUR_STATA_ACCESS_ALLEY_CLASS_ID",
-        buildingsServed: ["b32", "b34", "b36", "b24", "b26"]
+        lat: 42.36162669453648,
+        lng: -71.09152363364225,
+        classroomUrl: "https://classroom.google.com/c/ODEyNDUyODI0MDM0/m/ODE1Nzc5NjI4MTc4/details",
+        buildingsServed: ["b26", "b32", "b36"]
       },
       {
         id: "hockfieldCourt",
         name: "Hockfield Court",
         short: "Central access between Koch, Stata, and main complex.",
-        lat: 42.3622,
-        lng: -71.0908,
-        classroomUrl: "https://classroom.google.com/c/YOUR_HOCKFIELD_COURT_CLASS_ID",
-        buildingsServed: ["b32", "b34", "b36", "b24", "b26", "b13"]
+        lat: 42.36108525150766,
+        lng: -71.0884199733499,
+        classroomUrl: "https://classroom.google.com/c/ODEyNDUyODI0MDM0/m/ODIzOTMwOTk0MTEz/details",
+        buildingsServed: ["b16", "b56", "b57", "b66", "b68"]
       },
       {
         id: "mcdermottCourt",
         name: "McDermott Court",
         short: "Access for central dome & main corridor.",
-        lat: 42.3595,
-        lng: -71.0923,
-        classroomUrl: "https://classroom.google.com/c/YOUR_MCDERMOTT_COURT_CLASS_ID",
-        buildingsServed: ["b3", "b4", "b5", "b6", "b8", "b9", "b10", "b14", "b16", "b18"]
+        lat: 42.36090391955387,
+        lng: -71.08830874699721,
+        classroomUrl: "https://classroom.google.com/c/ODEyNDUyODI0MDM0/a/ODE1NzgxMTQxNDA4/details",
+        buildingsServed: ["b2", "b6", "b8", "b14", "b16", "b18", "b50", "b56", "b62", "b64", "b66"]
       },
       {
         id: "killianCourt",
         name: "Killian Court",
         short: "Access for river-facing main buildings.",
-        lat: 42.3584,
-        lng: -71.0899,
-        classroomUrl: "https://classroom.google.com/c/YOUR_KILLIAN_COURT_CLASS_ID",
-        buildingsServed: ["b1", "b2", "b3", "b4", "b10"]
+        lat: 42.3579997334124,
+        lng: -71.09100412745822,
+        classroomUrl: "https://classroom.google.com/c/ODEyNDUyODI0MDM0/a/ODIzOTMwMjYwMTQ2/details",
+        buildingsServed: ["b1", "b2", "b3", "b4", "b5", "b6"]
       },
       {
         id: "zCenter",
         name: "Z Center",
         short: "Access for athletics & west-side buildings.",
-        lat: 42.3592,
-        lng: -71.0969,
-        classroomUrl: "https://classroom.google.com/c/YOUR_Z_CENTER_CLASS_ID",
-        buildingsServed: ["w35", "w16", "w20", "b7", "b1"]
+        lat: 42.35892562670535,
+        lng: -71.09714086462036,
+        classroomUrl: "https://classroom.google.com/c/ODEyNDUyODI0MDM0/a/ODIzOTMzMTg2NzQ1/details",
+        buildingsServed: ["w16", "w20", "w35"]
       }
     ];
 
